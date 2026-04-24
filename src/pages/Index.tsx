@@ -1,16 +1,43 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { UtilityBar } from "@/components/agri/UtilityBar";
+import { SiteHeader } from "@/components/agri/SiteHeader";
+import { Hero } from "@/components/agri/Hero";
+import { NewsTicker } from "@/components/agri/NewsTicker";
+import { Modules } from "@/components/agri/Modules";
+import { Stats } from "@/components/agri/Stats";
+import { SiteFooter } from "@/components/agri/SiteFooter";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "GovernmentOrganization",
+    name: "Department of Agriculture & Farmers Welfare",
+    alternateName: "कृषि एवं किसान कल्याण विभाग",
+    parentOrganization: "Ministry of Agriculture & Farmers Welfare, Government of India",
+    url: "/",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Krishi Bhawan, Dr. Rajendra Prasad Road",
+      addressLocality: "New Delhi",
+      postalCode: "110001",
+      addressCountry: "IN",
+    },
+    telephone: "1800-180-1551",
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-dvh bg-background text-foreground">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+      <UtilityBar />
+      <SiteHeader />
+      <main id="main">
+        <Hero />
+        <NewsTicker />
+        <Stats />
+        <Modules />
+      </main>
+      <SiteFooter />
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
