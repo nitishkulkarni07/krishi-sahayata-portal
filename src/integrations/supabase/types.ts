@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      crop_listings: {
+        Row: {
+          commodity: string
+          contact: string | null
+          created_at: string
+          id: string
+          listing_type: string
+          location: string
+          price_per_qtl: number
+          quantity_qtl: number
+          status: string
+          user_id: string
+          variety: string | null
+        }
+        Insert: {
+          commodity: string
+          contact?: string | null
+          created_at?: string
+          id?: string
+          listing_type: string
+          location: string
+          price_per_qtl: number
+          quantity_qtl: number
+          status?: string
+          user_id: string
+          variety?: string | null
+        }
+        Update: {
+          commodity?: string
+          contact?: string | null
+          created_at?: string
+          id?: string
+          listing_type?: string
+          location?: string
+          price_per_qtl?: number
+          quantity_qtl?: number
+          status?: string
+          user_id?: string
+          variety?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          district: string | null
+          full_name: string | null
+          id: string
+          language: string | null
+          phone: string | null
+          state: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          district?: string | null
+          full_name?: string | null
+          id: string
+          language?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          district?: string | null
+          full_name?: string | null
+          id?: string
+          language?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      scheme_applications: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          scheme_code: string
+          scheme_name: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          scheme_code: string
+          scheme_name: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          scheme_code?: string
+          scheme_name?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
