@@ -1,12 +1,13 @@
 import { Banknote, Sprout, ShieldCheck, LineChart, CloudSun, Headset } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const MODULES = [
-  { id: "01", title: "PM-KISAN", icon: Banknote, desc: "Direct Benefit Transfer portal for ₹6,000 annual financial assistance and ledger tracking.", cta: "Access Module" },
-  { id: "02", title: "Soil Health Card", icon: Sprout, desc: "Geo-tagged nutrient analysis and custom fertilizer recommendations for specific land plots.", cta: "View Records" },
-  { id: "03", title: "Crop Insurance", icon: ShieldCheck, desc: "End-to-end risk management and claim settlement through Pradhan Mantri Fasal Bima Yojana.", cta: "Check Status" },
-  { id: "04", title: "Mandi Prices", icon: LineChart, desc: "Real-time commodity valuation across 1,000+ national markets via the e-NAM integration.", cta: "Live Feed" },
-  { id: "05", title: "Weather Advisory", icon: CloudSun, desc: "Hyper-local meteorological forecasting and pest outbreak warnings for proactive farming.", cta: "Forecast Map" },
-  { id: "06", title: "Kisan Call Center", icon: Headset, desc: "24/7 technical advisory line in 22 regional languages. Toll-free 1800-180-1551.", cta: "Contact Expert" },
+  { id: "01", title: "Schemes", icon: Banknote, desc: "Apply directly for PM-KISAN, KCC, PMFBY and other flagship schemes administered by the Department.", cta: "Apply Now", to: "/schemes" },
+  { id: "02", title: "Crop Marketplace", icon: Sprout, desc: "List your produce or post buy requirements on the national e-NAM mandi network.", cta: "Open Market", to: "/market" },
+  { id: "03", title: "Advisories", icon: CloudSun, desc: "Hyper-local agronomic, weather and pest advisories from IMD, ICAR and KVK observation networks.", cta: "View Advisories", to: "/advisories" },
+  { id: "04", title: "Market Statistics", icon: LineChart, desc: "Real-time price discovery, mandi arrivals and trade velocity across 28 states.", cta: "View Telemetry", to: "/statistics" },
+  { id: "05", title: "Crop Insurance", icon: ShieldCheck, desc: "End-to-end risk management and claim settlement through Pradhan Mantri Fasal Bima Yojana.", cta: "Apply", to: "/schemes" },
+  { id: "06", title: "Kisan Call Center", icon: Headset, desc: "24/7 technical advisory line in 22 regional languages. Toll-free 1800-180-1551.", cta: "Contact Expert", to: "/advisories" },
 ];
 
 export const Modules = () => {
@@ -28,9 +29,10 @@ export const Modules = () => {
         {MODULES.map((m) => {
           const Icon = m.icon;
           return (
-            <article
+            <Link
               key={m.id}
-              className="group relative bg-background p-8 transition-colors hover:bg-card md:p-10"
+              to={m.to}
+              className="group relative block bg-background p-8 transition-colors hover:bg-card md:p-10"
             >
               <div className="mb-8 flex items-start justify-between">
                 <span className="font-mono text-xs text-primary">{m.id}</span>
@@ -41,7 +43,7 @@ export const Modules = () => {
               <div className="mt-8 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground opacity-0 transition-opacity group-hover:opacity-100">
                 {m.cta} <span>→</span>
               </div>
-            </article>
+            </Link>
           );
         })}
       </div>
