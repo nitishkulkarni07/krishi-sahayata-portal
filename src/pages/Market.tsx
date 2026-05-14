@@ -59,11 +59,16 @@ const Market = () => {
     const parsed = listingSchema.safeParse(form);
     if (!parsed.success) { toast.error(parsed.error.issues[0].message); return; }
     setBusy(true);
+    const d = parsed.data;
     const { error } = await supabase.from("crop_listings").insert({
       user_id: user.id,
-      ...parsed.data,
-      variety: parsed.data.variety || null,
-      contact: parsed.data.contact || null,
+      listing_type: d.listing_type,
+      commodity: d.commodity,
+      quantity_qtl: d.quantity_qtl,
+      price_per_qtl: d.price_per_qtl,
+      location: d.location,
+      variety: d.variety || null,
+      contact: d.contact || null,
     });
     setBusy(false);
     if (error) return toast.error(error.message);
