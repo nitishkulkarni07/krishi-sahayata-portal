@@ -2,18 +2,19 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-
-const NAV: { label: string; to: string }[] = [
-  { label: "Home", to: "/" },
-  { label: "Schemes", to: "/schemes" },
-  { label: "Market", to: "/market" },
-  { label: "Advisories", to: "/advisories" },
-  { label: "Statistics", to: "/statistics" },
-];
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 export const SiteHeader = () => {
   const [open, setOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
+  const NAV = [
+    { label: t("nav.home"), to: "/" },
+    { label: t("nav.schemes"), to: "/schemes" },
+    { label: t("nav.market"), to: "/market" },
+    { label: t("nav.advisories"), to: "/advisories" },
+    { label: t("nav.statistics"), to: "/statistics" },
+  ];
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-4 md:px-8">
@@ -48,14 +49,14 @@ export const SiteHeader = () => {
               onClick={signOut}
               className="ml-2 rounded-full border border-primary px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-primary transition-all hover:bg-primary hover:text-primary-foreground"
             >
-              Sign Out
+              {t("nav.logout")}
             </button>
           ) : (
             <Link
               to="/auth"
               className="ml-2 rounded-full border border-primary px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-primary transition-all hover:bg-primary hover:text-primary-foreground"
             >
-              Farmer Login
+              {t("nav.login")}
             </Link>
           )}
         </nav>
@@ -87,7 +88,7 @@ export const SiteHeader = () => {
                 onClick={() => { setOpen(false); signOut(); }}
                 className="mt-4 rounded-full border border-primary px-5 py-3 text-center font-mono text-[10px] font-bold uppercase tracking-widest text-primary"
               >
-                Sign Out
+                {t("nav.logout")}
               </button>
             ) : (
               <Link
@@ -95,7 +96,7 @@ export const SiteHeader = () => {
                 onClick={() => setOpen(false)}
                 className="mt-4 rounded-full border border-primary px-5 py-3 text-center font-mono text-[10px] font-bold uppercase tracking-widest text-primary"
               >
-                Farmer Login
+                {t("nav.login")}
               </Link>
             )}
           </nav>
