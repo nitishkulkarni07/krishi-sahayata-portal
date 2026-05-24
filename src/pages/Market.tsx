@@ -5,6 +5,7 @@ import { PageShell } from "@/components/agri/PageShell";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 type Listing = {
   id: string;
@@ -32,6 +33,7 @@ const listingSchema = z.object({
 
 const Market = () => {
   const { user, loading } = useAuth();
+  const { tr } = useLanguage();
   const [tab, setTab] = useState<"sell" | "buy">("sell");
   const [listings, setListings] = useState<Listing[]>([]);
   const [form, setForm] = useState({
@@ -87,7 +89,7 @@ const Market = () => {
     >
       <div className="grid gap-12 lg:grid-cols-[1fr_2fr]">
         <form onSubmit={submit} className="space-y-4 border border-border bg-card p-6 h-fit">
-          <h3 className="font-mono text-[11px] uppercase tracking-widest text-primary">New Listing</h3>
+          <h3 className="font-mono text-[11px] uppercase tracking-widest text-primary">{tr("New Listing")}</h3>
 
           <div className="grid grid-cols-2 gap-2">
             {(["sell", "buy"] as const).map((t) => (
@@ -99,7 +101,7 @@ const Market = () => {
                   form.listing_type === t ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"
                 }`}
               >
-                I want to {t}
+                {tr(t === "sell" ? "I want to sell" : "I want to buy")}
               </button>
             ))}
           </div>
@@ -113,7 +115,7 @@ const Market = () => {
             { k: "contact", l: "Contact (optional)" },
           ].map((f) => (
             <div key={f.k} className="space-y-1">
-              <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{f.l}</label>
+              <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr(f.l)}</label>
               <input
                 type={(f as any).type ?? "text"}
                 value={(form as any)[f.k]}
@@ -127,7 +129,7 @@ const Market = () => {
             disabled={busy}
             className="w-full rounded-sm bg-primary px-4 py-3 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
-            {busy ? "Publishing…" : "Publish Listing"}
+            {tr(busy ? "Publishing…" : "Publish Listing")}
           </button>
         </form>
 
@@ -141,27 +143,27 @@ const Market = () => {
                   tab === t ? "border-b-2 border-primary text-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t === "sell" ? "Selling" : "Buying"} ({listings.filter((l) => l.listing_type === t).length})
+                {tr(t === "sell" ? "Selling" : "Buying")} ({listings.filter((l) => l.listing_type === t).length})
               </button>
             ))}
           </div>
 
           {filtered.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No active listings yet.</p>
+            <p className="text-sm text-muted-foreground">{tr("No active listings yet.")}</p>
           ) : (
             <div className="grid gap-px bg-border md:grid-cols-2">
               {filtered.map((l) => (
                 <article key={l.id} className="bg-background p-5">
                   <div className="flex items-baseline justify-between">
-                    <h4 className="text-base font-medium">{l.commodity}</h4>
+                    <h4 className="text-base font-medium">{tr(l.commodity)}</h4>
                     <span className="font-mono text-xs text-primary">₹{Number(l.price_per_qtl).toLocaleString("en-IN")}/qtl</span>
                   </div>
-                  {l.variety && <p className="text-xs text-muted-foreground">{l.variety}</p>}
+                  {l.variety && <p className="text-xs text-muted-foreground">{tr(l.variety)}</p>}
                   <dl className="mt-4 space-y-1 font-mono text-[11px] text-muted-foreground">
-                    <div className="flex justify-between"><dt>Qty</dt><dd>{Number(l.quantity_qtl).toLocaleString("en-IN")} qtl</dd></div>
-                    <div className="flex justify-between"><dt>Where</dt><dd>{l.location}</dd></div>
-                    {l.contact && <div className="flex justify-between"><dt>Contact</dt><dd>{l.contact}</dd></div>}
-                    <div className="flex justify-between"><dt>Posted</dt><dd>{new Date(l.created_at).toLocaleDateString()}</dd></div>
+                    <div className="flex justify-between"><dt>{tr("Qty")}</dt><dd>{Number(l.quantity_qtl).toLocaleString("en-IN")} {tr("qtl")}</dd></div>
+                    <div className="flex justify-between"><dt>{tr("Where")}</dt><dd>{tr(l.location)}</dd></div>
+                    {l.contact && <div className="flex justify-between"><dt>{tr("Contact")}</dt><dd>{l.contact}</dd></div>}
+                    <div className="flex justify-between"><dt>{tr("Posted")}</dt><dd>{new Date(l.created_at).toLocaleDateString()}</dd></div>
                   </dl>
                 </article>
               ))}
