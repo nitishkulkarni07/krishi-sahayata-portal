@@ -26,10 +26,10 @@ export const SiteHeader = () => {
           </div>
           <div className="leading-tight">
             <p className="font-mono text-[9px] md:text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Ministry of Agriculture & Farmers Welfare
+              {t("Ministry of Agriculture & Farmers Welfare")}
             </p>
             <p className="text-base md:text-lg font-medium tracking-tight">
-              कृषि एवं किसान कल्याण विभाग
+              {t("Department of Agriculture & Farmers Welfare")}
             </p>
           </div>
         </Link>
