@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageProvider";
+
 const ITEMS = [
   "Minimum Support Price (MSP) revised for 14 Kharif crops for marketing season 2024-25",
   "Soil Health Card mobile application crosses 12 million downloads nationwide",
@@ -7,13 +9,14 @@ const ITEMS = [
 ];
 
 export const NewsTicker = () => {
+  const { tr } = useLanguage();
   return (
     <div id="mandi" className="border-y border-border bg-card/40 py-4">
       <div className="mx-auto flex max-w-[1440px] items-center gap-6 px-4 md:px-8">
         <div className="flex shrink-0 items-center gap-2">
           <div className="size-2 animate-pulse-dot rounded-full bg-primary" />
           <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground">
-            Latest Transmission
+            {tr("Latest Transmission")}
           </span>
         </div>
         <div className="hidden h-4 w-px bg-border md:block" />
@@ -21,7 +24,7 @@ export const NewsTicker = () => {
           <div className="flex w-max animate-ticker gap-12">
             {[...ITEMS, ...ITEMS].map((t, i) => (
               <span key={i} className="flex items-center gap-12 whitespace-nowrap text-xs font-medium text-muted-foreground">
-                {t}
+                {tr(t)}
                 <span className="text-border">●</span>
               </span>
             ))}

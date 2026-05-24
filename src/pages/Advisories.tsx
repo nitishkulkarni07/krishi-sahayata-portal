@@ -1,5 +1,6 @@
 import { PageShell } from "@/components/agri/PageShell";
 import { CloudSun, Bug, Droplets, Sprout, ThermometerSun, Wind } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 const ADVISORIES = [
   { icon: CloudSun, region: "North Plains", crop: "Wheat", advice: "Optimal sowing window opens 12 Nov. Maintain seed rate at 100 kg/ha for late sowing.", level: "ROUTINE" },
@@ -15,7 +16,9 @@ const tone = (l: string) =>
   : l === "ALERT" ? "text-accent border-accent/40 bg-accent/10"
   : "text-primary border-primary/30 bg-primary/10";
 
-const Advisories = () => (
+const Advisories = () => {
+  const { tr } = useLanguage();
+  return (
   <PageShell
     eyebrow="Module 05 // Advisories"
     title="Agronomic & Weather Advisories"
@@ -28,18 +31,19 @@ const Advisories = () => (
           <article key={i} className="bg-background p-6 md:p-8">
             <div className="flex items-start justify-between mb-4">
               <Icon className="size-6 text-primary" strokeWidth={1.5} />
-              <span className={`rounded-sm border px-2 py-1 font-mono text-[10px] uppercase tracking-widest ${tone(a.level)}`}>{a.level}</span>
+              <span className={`rounded-sm border px-2 py-1 font-mono text-[10px] uppercase tracking-widest ${tone(a.level)}`}>{tr(a.level)}</span>
             </div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{a.region} · {a.crop}</p>
-            <p className="mt-3 text-base leading-relaxed">{a.advice}</p>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr(a.region)} · {tr(a.crop)}</p>
+            <p className="mt-3 text-base leading-relaxed">{tr(a.advice)}</p>
             <div className="mt-6 font-mono text-[10px] text-muted-foreground/60">
-              ISSUED // {new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase()}
+              {tr("ISSUED")} // {new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase()}
             </div>
           </article>
         );
       })}
     </div>
   </PageShell>
-);
+  );
+};
 
 export default Advisories;

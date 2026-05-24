@@ -1,5 +1,6 @@
 import { PageShell } from "@/components/agri/PageShell";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 const PRICES = [
   { month: "May", Wheat: 2275, Paddy: 2183, Mustard: 5650 },
@@ -30,7 +31,9 @@ const KPIS = [
 
 const tickStyle = { fill: "hsl(0 0% 60%)", fontSize: 11, fontFamily: "ui-monospace" };
 
-const Statistics = () => (
+const Statistics = () => {
+  const { tr } = useLanguage();
+  return (
   <PageShell
     eyebrow="Module 04 // Telemetry"
     title="Market Statistics"
@@ -39,7 +42,7 @@ const Statistics = () => (
     <div className="mb-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
       {KPIS.map((k) => (
         <div key={k.label} className="bg-background p-6">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{k.label}</p>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr(k.label)}</p>
           <p className="mt-3 text-3xl font-light tracking-tight text-primary">{k.value}</p>
         </div>
       ))}
@@ -49,8 +52,8 @@ const Statistics = () => (
       <section className="lg:col-span-3 border border-border bg-card p-6">
         <header className="mb-6 flex items-baseline justify-between">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-primary">Price Trend</p>
-            <h3 className="mt-1 text-lg font-medium">Modal Price (₹/quintal) — last 7 months</h3>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-primary">{tr("Price Trend")}</p>
+            <h3 className="mt-1 text-lg font-medium">{tr("Modal Price (₹/quintal) — last 7 months")}</h3>
           </div>
         </header>
         <ResponsiveContainer width="100%" height={300}>
@@ -68,8 +71,8 @@ const Statistics = () => (
 
       <section className="lg:col-span-2 border border-border bg-card p-6">
         <header className="mb-6">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-primary">Arrivals</p>
-          <h3 className="mt-1 text-lg font-medium">Mandi arrivals by state ('000 qtl)</h3>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-primary">{tr("Arrivals")}</p>
+          <h3 className="mt-1 text-lg font-medium">{tr("Mandi arrivals by state ('000 qtl)")}</h3>
         </header>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={ARRIVALS}>
@@ -83,6 +86,7 @@ const Statistics = () => (
       </section>
     </div>
   </PageShell>
-);
+  );
+};
 
 export default Statistics;

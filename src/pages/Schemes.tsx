@@ -4,6 +4,7 @@ import { PageShell } from "@/components/agri/PageShell";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 const SCHEMES = [
   { code: "PMKISAN", name: "PM-KISAN Samman Nidhi", desc: "₹6,000/year direct income support to land-holding farmer families.", tag: "DBT" },
@@ -18,6 +19,7 @@ type Application = { id: string; scheme_code: string; scheme_name: string; statu
 
 const Schemes = () => {
   const { user, loading } = useAuth();
+  const { tr } = useLanguage();
   const [apps, setApps] = useState<Application[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -54,40 +56,40 @@ const Schemes = () => {
               <span className="font-mono text-[10px] uppercase tracking-widest text-primary">{s.tag}</span>
               <span className="font-mono text-[10px] text-muted-foreground/60">{s.code}</span>
             </div>
-            <h3 className="text-lg font-medium tracking-tight">{s.name}</h3>
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+            <h3 className="text-lg font-medium tracking-tight">{tr(s.name)}</h3>
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{tr(s.desc)}</p>
             <button
               disabled={busy === s.code || appliedSet.has(s.code)}
               onClick={() => apply(s.code, s.name)}
               className="mt-6 rounded-sm border border-primary px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-primary transition hover:bg-primary hover:text-primary-foreground disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-primary"
             >
-              {appliedSet.has(s.code) ? "Applied ✓" : busy === s.code ? "Submitting…" : "Apply Now →"}
+              {tr(appliedSet.has(s.code) ? "Applied ✓" : busy === s.code ? "Submitting…" : "Apply Now →")}
             </button>
           </article>
         ))}
       </div>
 
       <section>
-        <h2 className="mb-6 text-xl font-medium tracking-tight">My Applications</h2>
+        <h2 className="mb-6 text-xl font-medium tracking-tight">{tr("My Applications")}</h2>
         {apps.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No applications submitted yet.</p>
+          <p className="text-sm text-muted-foreground">{tr("No applications submitted yet.")}</p>
         ) : (
           <div className="border border-border">
             <table className="w-full text-sm">
               <thead className="bg-card">
                 <tr className="text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  <th className="p-4">Scheme</th>
-                  <th className="p-4">Code</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4">Submitted</th>
+                  <th className="p-4">{tr("Scheme")}</th>
+                  <th className="p-4">{tr("Code")}</th>
+                  <th className="p-4">{tr("Status")}</th>
+                  <th className="p-4">{tr("Submitted")}</th>
                 </tr>
               </thead>
               <tbody>
                 {apps.map((a) => (
                   <tr key={a.id} className="border-t border-border">
-                    <td className="p-4">{a.scheme_name}</td>
+                    <td className="p-4">{tr(a.scheme_name)}</td>
                     <td className="p-4 font-mono text-xs text-muted-foreground">{a.scheme_code}</td>
-                    <td className="p-4"><span className="rounded-sm bg-primary/10 px-2 py-1 font-mono text-[10px] uppercase text-primary">{a.status}</span></td>
+                    <td className="p-4"><span className="rounded-sm bg-primary/10 px-2 py-1 font-mono text-[10px] uppercase text-primary">{tr(a.status)}</span></td>
                     <td className="p-4 font-mono text-xs text-muted-foreground">{new Date(a.created_at).toLocaleDateString()}</td>
                   </tr>
                 ))}

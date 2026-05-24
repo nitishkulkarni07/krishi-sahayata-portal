@@ -4,6 +4,8 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { useLanguage } from "@/i18n/LanguageProvider";
+import { UtilityBar } from "@/components/agri/UtilityBar";
 
 const signupSchema = z.object({
   full_name: z.string().trim().min(2, "Name too short").max(100),
@@ -19,6 +21,7 @@ const loginSchema = z.object({
 const Auth = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { tr } = useLanguage();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ full_name: "", email: "", password: "", phone: "" });
@@ -62,19 +65,19 @@ const Auth = () => {
 
   return (
     <div className="min-h-dvh bg-background text-foreground grid lg:grid-cols-2">
+      <div className="lg:col-span-2"><UtilityBar /></div>
       <div className="hidden lg:flex flex-col justify-between p-12 bg-card border-r border-border">
         <Link to="/" className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground">
-          ← Back to portal
+          ← {tr("Back to portal")}
         </Link>
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary mb-4">Farmer Identity Network</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary mb-4">{tr("Farmer Identity Network")}</p>
           <h1 className="text-4xl font-light tracking-tight leading-tight">
-            Secure access to <br />
-            <span className="text-primary">national agronomy</span> services.
+            {tr("Secure access to")} <br />
+            <span className="text-primary">{tr("national agronomy")}</span> {tr("services.")}
           </h1>
           <p className="mt-6 text-sm text-muted-foreground max-w-md">
-            Sign in to apply for schemes, list crops on the national mandi, and receive
-            personalised advisories from the Department of Agriculture & Farmers Welfare.
+            {tr("Sign in to apply for schemes, list crops on the national mandi, and receive personalised advisories from the Department of Agriculture & Farmers Welfare.")}
           </p>
         </div>
         <div className="font-mono text-[10px] text-muted-foreground/60">
@@ -85,15 +88,15 @@ const Auth = () => {
       <div className="flex items-center justify-center p-6 md:p-12">
         <form onSubmit={onSubmit} className="w-full max-w-sm space-y-6">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">{mode === "login" ? "Authenticate" : "Register"}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">{tr(mode === "login" ? "Authenticate" : "Register")}</p>
             <h2 className="mt-2 text-2xl font-medium tracking-tight">
-              {mode === "login" ? "Farmer Login" : "Create Farmer Account"}
+              {tr(mode === "login" ? "Farmer Login" : "Create Farmer Account")}
             </h2>
           </div>
 
           {mode === "signup" && (
             <div className="space-y-2">
-              <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Full Name</label>
+              <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Full Name")}</label>
               <input
                 value={form.full_name}
                 onChange={(e) => setForm({ ...form, full_name: e.target.value })}
@@ -104,7 +107,7 @@ const Auth = () => {
           )}
 
           <div className="space-y-2">
-            <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Email</label>
+            <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Email")}</label>
             <input
               type="email"
               value={form.email}
@@ -116,7 +119,7 @@ const Auth = () => {
 
           {mode === "signup" && (
             <div className="space-y-2">
-              <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Phone (optional)</label>
+              <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Phone (optional)")}</label>
               <input
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -126,7 +129,7 @@ const Auth = () => {
           )}
 
           <div className="space-y-2">
-            <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Password</label>
+            <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Password")}</label>
             <input
               type="password"
               value={form.password}
@@ -141,7 +144,7 @@ const Auth = () => {
             disabled={busy}
             className="w-full rounded-sm bg-primary px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-widest text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
           >
-            {busy ? "Processing…" : mode === "login" ? "Sign In" : "Create Account"}
+            {tr(busy ? "Processing…" : mode === "login" ? "Sign In" : "Create Account")}
           </button>
 
           <button
@@ -149,7 +152,7 @@ const Auth = () => {
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
             className="w-full text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground"
           >
-            {mode === "login" ? "New here? Register a farmer account →" : "Already registered? Sign in →"}
+            {tr(mode === "login" ? "New here? Register a farmer account →" : "Already registered? Sign in →")}
           </button>
         </form>
       </div>
