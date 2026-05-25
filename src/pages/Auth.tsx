@@ -12,6 +12,13 @@ const signupSchema = z.object({
   email: z.string().trim().email().max(255),
   password: z.string().min(8, "Min 8 characters").max(72),
   phone: z.string().trim().min(7).max(20).optional().or(z.literal("")),
+  role: z.enum(["farmer", "trader"]),
+  state: z.string().trim().min(2).max(60),
+  district: z.string().trim().min(2).max(60),
+  aadhaar: z.string().trim().regex(/^\d{12}$/, "Aadhaar must be 12 digits"),
+  address: z.string().trim().min(4).max(240),
+  trader_company: z.string().trim().max(120).optional().or(z.literal("")),
+  trader_license: z.string().trim().max(60).optional().or(z.literal("")),
 });
 const loginSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -24,7 +31,12 @@ const Auth = () => {
   const { tr } = useLanguage();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({ full_name: "", email: "", password: "", phone: "" });
+  const [form, setForm] = useState({
+    full_name: "", email: "", password: "", phone: "",
+    role: "farmer" as "farmer" | "trader",
+    state: "", district: "", aadhaar: "", address: "",
+    trader_company: "", trader_license: "",
+  });
 
   useEffect(() => {
     if (!loading && user) navigate("/", { replace: true });
@@ -42,7 +54,17 @@ const Auth = () => {
           password: p.data.password,
           options: {
             emailRedirectTo: `${window.location.origin}/`,
-            data: { full_name: p.data.full_name, phone: p.data.phone },
+            data: {
+              full_name: p.data.full_name,
+              phone: p.data.phone,
+              role: p.data.role,
+              state: p.data.state,
+              district: p.data.district,
+              aadhaar: p.data.aadhaar,
+              address: p.data.address,
+              trader_company: p.data.trader_company,
+              trader_license: p.data.trader_license,
+            },
           },
         });
         if (error) throw error;
@@ -126,6 +148,59 @@ const Auth = () => {
                 className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary"
               />
             </div>
+          )}
+
+          {mode === "signup" && (
+            <>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Account Type")}</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {(["farmer","trader"] as const).map((r) => (
+                    <button type="button" key={r} onClick={() => setForm({ ...form, role: r })}
+                      className={`border px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition ${
+                        form.role === r ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"
+                      }`}>{tr(r === "farmer" ? "Farmer" : "Trader / Buyer")}</button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("State")}</label>
+                  <input value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} required
+                    className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("District")}</label>
+                  <input value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} required
+                    className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Aadhaar Number (12 digits)")}</label>
+                <input inputMode="numeric" maxLength={12} value={form.aadhaar}
+                  onChange={(e) => setForm({ ...form, aadhaar: e.target.value.replace(/\D/g, "") })} required
+                  className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm tracking-widest outline-none focus:border-primary" />
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Address")}</label>
+                <textarea value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required rows={2}
+                  className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+              </div>
+              {form.role === "trader" && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Company / Firm")}</label>
+                    <input value={form.trader_company} onChange={(e) => setForm({ ...form, trader_company: e.target.value })}
+                      className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Trade License No.")}</label>
+                    <input value={form.trader_license} onChange={(e) => setForm({ ...form, trader_license: e.target.value })}
+                      className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           <div className="space-y-2">

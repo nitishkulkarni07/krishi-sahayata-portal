@@ -36,6 +36,9 @@ const Market = () => {
   const { tr } = useLanguage();
   const [tab, setTab] = useState<"sell" | "buy">("sell");
   const [listings, setListings] = useState<Listing[]>([]);
+  const [profile, setProfile] = useState<{ state: string | null; district: string | null; role: string | null } | null>(null);
+  const [regionOnly, setRegionOnly] = useState(true);
+  const [recording, setRecording] = useState<string | null>(null);
   const [form, setForm] = useState({
     listing_type: "sell" as "sell" | "buy",
     commodity: "",
@@ -51,7 +54,12 @@ const Market = () => {
     const { data } = await supabase.from("crop_listings").select("*").order("created_at", { ascending: false }).limit(200);
     setListings((data as Listing[]) ?? []);
   };
-  useEffect(() => { if (user) refresh(); }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    refresh();
+    supabase.from("profiles").select("state,district,role").eq("id", user.id).maybeSingle()
+      .then(({ data }) => setProfile(data as any));
+  }, [user]);
 
   if (loading) return null;
   if (!user) return <Navigate to="/auth" replace />;
@@ -79,7 +87,32 @@ const Market = () => {
     refresh();
   };
 
-  const filtered = listings.filter((l) => l.listing_type === tab);
+  const region = (profile?.state || "").toLowerCase();
+  const district = (profile?.district || "").toLowerCase();
+  const matchesRegion = (loc: string) => {
+    const l = (loc || "").toLowerCase();
+    return (!!region && l.includes(region)) || (!!district && l.includes(district));
+  };
+  const base = listings.filter((l) => l.listing_type === tab);
+  const filtered = regionOnly && region ? base.filter((l) => matchesRegion(l.location)) : base;
+
+  const recordPurchase = async (l: Listing) => {
+    if (l.listing_type !== "sell") return;
+    setRecording(l.id);
+    const { error } = await supabase.from("purchases").insert({
+      user_id: user.id,
+      listing_id: l.id,
+      commodity: l.commodity,
+      variety: l.variety,
+      quantity_qtl: l.quantity_qtl,
+      price_per_qtl: l.price_per_qtl,
+      location: l.location,
+      seller_contact: l.contact,
+    });
+    setRecording(null);
+    if (error) return toast.error(error.message);
+    toast.success("Purchase recorded in your dashboard.");
+  };
 
   return (
     <PageShell
@@ -146,6 +179,12 @@ const Market = () => {
                 {tr(t === "sell" ? "Selling" : "Buying")} ({listings.filter((l) => l.listing_type === t).length})
               </button>
             ))}
+            {region && (
+              <label className="ml-auto flex cursor-pointer items-center gap-2 px-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                <input type="checkbox" checked={regionOnly} onChange={(e) => setRegionOnly(e.target.checked)} />
+                {tr("My region only")} ({profile?.district || profile?.state})
+              </label>
+            )}
           </div>
 
           {filtered.length === 0 ? (
@@ -165,6 +204,12 @@ const Market = () => {
                     {l.contact && <div className="flex justify-between"><dt>{tr("Contact")}</dt><dd>{l.contact}</dd></div>}
                     <div className="flex justify-between"><dt>{tr("Posted")}</dt><dd>{new Date(l.created_at).toLocaleDateString()}</dd></div>
                   </dl>
+                  {tab === "sell" && l.user_id !== user.id && (
+                    <button onClick={() => recordPurchase(l)} disabled={recording === l.id}
+                      className="mt-4 w-full rounded-sm border border-primary px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-primary hover:bg-primary hover:text-primary-foreground disabled:opacity-50">
+                      {tr(recording === l.id ? "Recording…" : "Buy & Record")}
+                    </button>
+                  )}
                 </article>
               ))}
             </div>

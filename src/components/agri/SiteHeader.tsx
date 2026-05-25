@@ -14,6 +14,7 @@ export const SiteHeader = () => {
     { label: t("nav.market"), to: "/market" },
     { label: t("nav.advisories"), to: "/advisories" },
     { label: t("nav.statistics"), to: "/statistics" },
+    ...(user ? [{ label: t("Dashboard"), to: "/dashboard" }] : []),
   ];
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/70 backdrop-blur-xl">

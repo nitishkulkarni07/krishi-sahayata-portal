@@ -10,6 +10,7 @@ import Schemes from "./pages/Schemes.tsx";
 import Market from "./pages/Market.tsx";
 import Advisories from "./pages/Advisories.tsx";
 import Statistics from "./pages/Statistics.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/market" element={<Market />} />
             <Route path="/advisories" element={<Advisories />} />
             <Route path="/statistics" element={<Statistics />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
             </Routes>
