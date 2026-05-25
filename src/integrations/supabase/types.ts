@@ -58,34 +58,91 @@ export type Database = {
       }
       profiles: {
         Row: {
+          aadhaar: string | null
+          address: string | null
           created_at: string
           district: string | null
           full_name: string | null
           id: string
           language: string | null
           phone: string | null
+          role: string
           state: string | null
+          trader_company: string | null
+          trader_license: string | null
           updated_at: string
         }
         Insert: {
+          aadhaar?: string | null
+          address?: string | null
           created_at?: string
           district?: string | null
           full_name?: string | null
           id: string
           language?: string | null
           phone?: string | null
+          role?: string
           state?: string | null
+          trader_company?: string | null
+          trader_license?: string | null
           updated_at?: string
         }
         Update: {
+          aadhaar?: string | null
+          address?: string | null
           created_at?: string
           district?: string | null
           full_name?: string | null
           id?: string
           language?: string | null
           phone?: string | null
+          role?: string
           state?: string | null
+          trader_company?: string | null
+          trader_license?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          commodity: string
+          created_at: string
+          id: string
+          listing_id: string | null
+          location: string
+          notes: string | null
+          price_per_qtl: number
+          quantity_qtl: number
+          seller_contact: string | null
+          user_id: string
+          variety: string | null
+        }
+        Insert: {
+          commodity: string
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          location: string
+          notes?: string | null
+          price_per_qtl: number
+          quantity_qtl: number
+          seller_contact?: string | null
+          user_id: string
+          variety?: string | null
+        }
+        Update: {
+          commodity?: string
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          location?: string
+          notes?: string | null
+          price_per_qtl?: number
+          quantity_qtl?: number
+          seller_contact?: string | null
+          user_id?: string
+          variety?: string | null
         }
         Relationships: []
       }
