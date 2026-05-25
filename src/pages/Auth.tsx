@@ -12,6 +12,13 @@ const signupSchema = z.object({
   email: z.string().trim().email().max(255),
   password: z.string().min(8, "Min 8 characters").max(72),
   phone: z.string().trim().min(7).max(20).optional().or(z.literal("")),
+  role: z.enum(["farmer", "trader"]),
+  state: z.string().trim().min(2).max(60),
+  district: z.string().trim().min(2).max(60),
+  aadhaar: z.string().trim().regex(/^\d{12}$/, "Aadhaar must be 12 digits"),
+  address: z.string().trim().min(4).max(240),
+  trader_company: z.string().trim().max(120).optional().or(z.literal("")),
+  trader_license: z.string().trim().max(60).optional().or(z.literal("")),
 });
 const loginSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -24,7 +31,12 @@ const Auth = () => {
   const { tr } = useLanguage();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({ full_name: "", email: "", password: "", phone: "" });
+  const [form, setForm] = useState({
+    full_name: "", email: "", password: "", phone: "",
+    role: "farmer" as "farmer" | "trader",
+    state: "", district: "", aadhaar: "", address: "",
+    trader_company: "", trader_license: "",
+  });
 
   useEffect(() => {
     if (!loading && user) navigate("/", { replace: true });
@@ -42,7 +54,17 @@ const Auth = () => {
           password: p.data.password,
           options: {
             emailRedirectTo: `${window.location.origin}/`,
-            data: { full_name: p.data.full_name, phone: p.data.phone },
+            data: {
+              full_name: p.data.full_name,
+              phone: p.data.phone,
+              role: p.data.role,
+              state: p.data.state,
+              district: p.data.district,
+              aadhaar: p.data.aadhaar,
+              address: p.data.address,
+              trader_company: p.data.trader_company,
+              trader_license: p.data.trader_license,
+            },
           },
         });
         if (error) throw error;
