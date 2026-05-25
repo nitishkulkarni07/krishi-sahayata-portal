@@ -150,6 +150,59 @@ const Auth = () => {
             </div>
           )}
 
+          {mode === "signup" && (
+            <>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Account Type")}</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {(["farmer","trader"] as const).map((r) => (
+                    <button type="button" key={r} onClick={() => setForm({ ...form, role: r })}
+                      className={`border px-3 py-2 font-mono text-[10px] uppercase tracking-widest transition ${
+                        form.role === r ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"
+                      }`}>{tr(r === "farmer" ? "Farmer" : "Trader / Buyer")}</button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("State")}</label>
+                  <input value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} required
+                    className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("District")}</label>
+                  <input value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} required
+                    className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Aadhaar Number (12 digits)")}</label>
+                <input inputMode="numeric" maxLength={12} value={form.aadhaar}
+                  onChange={(e) => setForm({ ...form, aadhaar: e.target.value.replace(/\D/g, "") })} required
+                  className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm tracking-widest outline-none focus:border-primary" />
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Address")}</label>
+                <textarea value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required rows={2}
+                  className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+              </div>
+              {form.role === "trader" && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Company / Firm")}</label>
+                    <input value={form.trader_company} onChange={(e) => setForm({ ...form, trader_company: e.target.value })}
+                      className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Trade License No.")}</label>
+                    <input value={form.trader_license} onChange={(e) => setForm({ ...form, trader_license: e.target.value })}
+                      className="w-full rounded-sm border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:border-primary" />
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
           <div className="space-y-2">
             <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{tr("Password")}</label>
             <input
